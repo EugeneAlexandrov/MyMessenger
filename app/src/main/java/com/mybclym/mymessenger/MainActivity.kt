@@ -14,6 +14,8 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mybclym.mymessenger.databinding.ActivityMainBinding
+import com.mybclym.mymessenger.ui.ChatsFragment
+import com.mybclym.mymessenger.ui.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +43,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFunc() {
         setSupportActionBar(toolbar)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.data_container, ChatsFragment())
+            .commit()
         createHeader()
         createDrawer()
     }
@@ -104,8 +110,13 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
-                    Toast.makeText(applicationContext, position.toString(), Toast.LENGTH_SHORT)
-                        .show()
+                    when (position) {
+                        7 -> supportFragmentManager
+                            .beginTransaction()
+                            .addToBackStack(null)
+                            .replace(R.id.data_container, SettingsFragment())
+                            .commit()
+                    }
                     return false
                 }
 
