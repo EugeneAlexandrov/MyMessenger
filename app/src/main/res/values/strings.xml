@@ -11,4 +11,6 @@
     <string name="btn_aboutMe_hint">Напишите немного о себе</string>
     <string name="settings_username">Eugene Alexandrov</string>
     <string name="settings_status">в сети</string>
+    <string name="change_name">Изменить имя</string>
+    <string name="exit">Выход</string>
 </resources>
