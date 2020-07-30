@@ -3,6 +3,7 @@
     <color name="colorPrimary">#0088CC</color>
     <color name="colorPrimaryDark">#006DA3</color>
     <color name="colorAccent">#FFF</color>
+    <color name="colorHint">#878282</color>
     <!-- Material DEFAULT colors -->
     <color name="material_drawer_primary">#2196F3</color>
     <color name="material_drawer_primary_dark">#1976D2</color>
