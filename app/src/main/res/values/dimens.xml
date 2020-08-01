@@ -14,6 +14,7 @@
     <dimen name="settings_lable_margin">10dp</dimen>
     <dimen name="settings_lable_padding">6dp</dimen>
     <dimen name="settings_text_padding">10dp</dimen>
+    <dimen name="appPadding">5dp</dimen>
 
 
 </resources>
