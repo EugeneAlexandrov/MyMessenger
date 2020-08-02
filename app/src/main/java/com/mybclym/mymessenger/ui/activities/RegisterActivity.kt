@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.databinding.ActivityRegisterBinding
 import com.mybclym.mymessenger.ui.fragments.EntryPhoneNumberFragment
+import com.mybclym.mymessenger.utilits.replaceFragment
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -21,8 +22,6 @@ class RegisterActivity : AppCompatActivity() {
         toolBar = binding.RegisterToolBar
         setSupportActionBar(toolBar)
         title = getString(R.string.register_toolbar_text)
-        supportFragmentManager.beginTransaction()
-            .add(R.id.register_data_container, EntryPhoneNumberFragment())
-            .commit()
+        replaceFragment(EntryPhoneNumberFragment())
     }
 }

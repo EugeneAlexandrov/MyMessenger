@@ -12,7 +12,9 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mybclym.mymessenger.R
+import com.mybclym.mymessenger.ui.fragments.ChartsFragment
 import com.mybclym.mymessenger.ui.fragments.SettingsFragment
+import com.mybclym.mymessenger.utilits.replaceFragment
 
 class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
     private lateinit var drawer: Drawer
@@ -83,13 +85,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
                     when (position) {
-                        7 -> mainActivity.supportFragmentManager
-                            .beginTransaction()
-                            .addToBackStack(null)
-                            .replace(R.id.data_container,
-                                SettingsFragment()
-                            )
-                            .commit()
+                        7 -> mainActivity.replaceFragment(SettingsFragment())
                     }
                     return false
                 }

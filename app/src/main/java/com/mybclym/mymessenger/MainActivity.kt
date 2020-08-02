@@ -1,13 +1,14 @@
 package com.mybclym.mymessenger
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import com.mybclym.mymessenger.databinding.ActivityMainBinding
 import com.mybclym.mymessenger.ui.activities.RegisterActivity
-import com.mybclym.mymessenger.ui.fragments.ChatsFragment
+import com.mybclym.mymessenger.ui.fragments.ChartsFragment
 import com.mybclym.mymessenger.ui.objects.AppDrawer
+import com.mybclym.mymessenger.utilits.replaceActivity
+import com.mybclym.mymessenger.utilits.replaceFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,19 +36,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFunc() {
-        if (false) {
+        if (true) {
             setSupportActionBar(toolbar)
-            supportFragmentManager
-                .beginTransaction()
-                .replace(
-                    R.id.data_container,
-                    ChatsFragment()
-                )
-                .commit()
             appDrawer.create()
+            replaceFragment(ChartsFragment())
         } else {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+            replaceActivity(RegisterActivity())
         }
     }
 }
