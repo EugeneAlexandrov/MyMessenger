@@ -14,7 +14,7 @@
         android:layout_margin="@dimen/horizontal_margin"
         android:hint="@string/label"
         app:counterEnabled="true"
-        app:counterMaxLength="11"
+        app:counterMaxLength="12"
         app:counterTextColor="@color/colorHint"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"

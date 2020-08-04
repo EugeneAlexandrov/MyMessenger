@@ -3,10 +3,12 @@ package com.mybclym.mymessenger
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
+import com.google.firebase.auth.FirebaseAuth
 import com.mybclym.mymessenger.databinding.ActivityMainBinding
 import com.mybclym.mymessenger.ui.activities.RegisterActivity
 import com.mybclym.mymessenger.ui.fragments.ChartsFragment
 import com.mybclym.mymessenger.ui.objects.AppDrawer
+import com.mybclym.mymessenger.utilits.AUTH
 import com.mybclym.mymessenger.utilits.replaceActivity
 import com.mybclym.mymessenger.utilits.replaceFragment
 
@@ -26,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         initFields()
         initFunc()
-
     }
 
     private fun initFields() {
@@ -36,10 +37,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFunc() {
-        if (true) {
+        if (AUTH.currentUser != null) {
             setSupportActionBar(toolbar)
             appDrawer.create()
-            replaceFragment(ChartsFragment())
+            replaceFragment(ChartsFragment(), false)
         } else {
             replaceActivity(RegisterActivity())
         }
