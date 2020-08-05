@@ -15,10 +15,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.ui.activities.RegisterActivity
-import com.mybclym.mymessenger.utilits.AUTH
-import com.mybclym.mymessenger.utilits.AppTextWatcher
-import com.mybclym.mymessenger.utilits.replaceActivity
-import com.mybclym.mymessenger.utilits.showToast
+import com.mybclym.mymessenger.utilits.*
 import kotlinx.android.synthetic.main.fragment_enter_code.*
 
 class EntryCodeFragment(val phoneNumber: String, val id: String) :
@@ -40,8 +37,18 @@ class EntryCodeFragment(val phoneNumber: String, val id: String) :
         val credential = PhoneAuthProvider.getCredential(id, code)
         AUTH.signInWithCredential(credential).addOnCompleteListener() {
             if (it.isSuccessful) {
-                showToast("OK")
-                (activity as RegisterActivity).replaceActivity(MainActivity())
+                val uid = AUTH.currentUser?.uid.toString()
+                val dataMap = mutableMapOf<String, Any>()
+                dataMap[CHILD_ID] = uid
+                dataMap[CHILD_PHONE] = phoneNumber
+                dataMap[CHILD_USERNAME] = uid
+                REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dataMap)
+                    .addOnCompleteListener { task2 ->
+                        if (task2.isSuccessful) {
+                            showToast("OK")
+                            (activity as RegisterActivity).replaceActivity(MainActivity())
+                        } else showToast(task2.exception?.message.toString())
+                    }
             } else showToast(it.exception?.message.toString())
         }
     }

@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.databinding.ActivityRegisterBinding
 import com.mybclym.mymessenger.ui.fragments.EntryPhoneNumberFragment
+import com.mybclym.mymessenger.utilits.initFirebase
 import com.mybclym.mymessenger.utilits.replaceFragment
 
 class RegisterActivity : AppCompatActivity() {
@@ -15,6 +16,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initFirebase()
     }
 
     override fun onStart() {

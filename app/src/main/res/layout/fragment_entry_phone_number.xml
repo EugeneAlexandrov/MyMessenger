@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/horizontal_margin"
         android:hint="@string/label"
+        app:boxStrokeColor="@color/primary"
+        android:textColorHint="@color/primary"
         app:counterEnabled="true"
         app:counterMaxLength="12"
         app:counterTextColor="@color/colorHint"
