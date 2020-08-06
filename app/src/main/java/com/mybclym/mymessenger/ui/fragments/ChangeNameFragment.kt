@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 /**
  * A simple [Fragment] subclass.
  */
-class ChangeNameFragment : Fragment(R.layout.fragment_change_name) {
+class ChangeNameFragment : BaseFragment(R.layout.fragment_change_name) {
     override fun onResume() {
         super.onResume()
         setHasOptionsMenu(true)

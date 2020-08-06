@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/horizontal_margin"
-            android:text="@string/settings_username"
+            tools:text="@string/settings_username"
             android:textColor="@color/accent"
             android:textSize="@dimen/large_textsize"
             app:layout_constraintStart_toEndOf="@id/settings_user_photo"
@@ -68,7 +68,7 @@
         <TextView
             android:id="@+id/btn_change_phone_phonetext"
             style="@style/settings_normaltext"
-            android:text="@string/phone"
+            tools:text="@string/phone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,7 +94,7 @@
         <TextView
             android:id="@+id/btn_change_login_logintext"
             style="@style/settings_normaltext"
-            android:text="@string/login"
+            tools:text="@string/login"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -120,7 +120,7 @@
         <TextView
             android:id="@+id/btn_aboutMe_text"
             style="@style/settings_normaltext"
-            android:text="@string/aboutMe"
+            tools:text="@string/aboutMe"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
