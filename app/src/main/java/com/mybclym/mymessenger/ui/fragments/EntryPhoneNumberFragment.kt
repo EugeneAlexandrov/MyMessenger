@@ -9,10 +9,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.ui.activities.RegisterActivity
-import com.mybclym.mymessenger.utilits.AUTH
-import com.mybclym.mymessenger.utilits.replaceActivity
-import com.mybclym.mymessenger.utilits.replaceFragment
-import com.mybclym.mymessenger.utilits.showToast
+import com.mybclym.mymessenger.utilits.*
 import kotlinx.android.synthetic.main.fragment_entry_phone_number.*
 import java.util.concurrent.TimeUnit
 
@@ -28,13 +25,29 @@ class EntryPhoneNumberFragment : Fragment(R.layout.fragment_entry_phone_number) 
     override fun onStart() {
         super.onStart()
         phoneCallback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(p0: PhoneAuthCredential) {
-                AUTH.signInWithCredential(p0).addOnCompleteListener() {
-                    if (it.isSuccessful) {
-                        showToast("Добро пожаловать")
-                        (activity as RegisterActivity).replaceActivity(MainActivity())
-                    } else showToast(it.exception?.message.toString())
+            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                AUTH.signInWithCredential(credential).addOnCompleteListener() {task1->
+                    if (task1.isSuccessful) {
+                        val uid = AUTH.currentUser?.uid.toString()
+                        val dataMap = mutableMapOf<String, Any>()
+                        dataMap[CHILD_ID] = uid
+                        dataMap[CHILD_PHONE] = phoneNumber
+                        dataMap[CHILD_USERNAME] = uid
+                        REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dataMap)
+                            .addOnCompleteListener { task2 ->
+                                if (task2.isSuccessful) {
+                                    showToast("OK")
+                                    (activity as RegisterActivity).replaceActivity(MainActivity())
+                                } else showToast(task2.exception?.message.toString())
+                            }
+                    } else showToast(task1.exception?.message.toString())
                 }
+//                AUTH.signInWithCredential(p0).addOnCompleteListener() {
+//                    if (it.isSuccessful) {
+//                        showToast("Добро пожаловать")
+//                        (activity as RegisterActivity).replaceActivity(MainActivity())
+//                    } else showToast(it.exception?.message.toString())
+//                }
             }
 
             override fun onVerificationFailed(p0: FirebaseException) {
