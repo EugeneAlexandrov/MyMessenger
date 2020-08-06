@@ -17,8 +17,10 @@
     <string name="enter_code_image_discription">Enter code from sms image</string>
     <string name="enter_code_text">Введите код</string>
     <string name="register_send_sms_text">Мы отправили sms с кодом на ваш телефон</string>
-    <string name="register_defaultcode_hint">123456</string>
+    <string name="register_defaultcode_hint">------</string>
     <string name="register_toolbar_text">Ваш телефон</string>
     <string name="register_toast_emptyphonenumber">Введите номер телефона</string>
     <string name="label">Введите номер телефона</string>
+    <string name="changename_toast_empty_name">Имя не может быть пустым</string>
+    <string name="changename_toast_dataupdate">Данные обновленны</string>
 </resources>

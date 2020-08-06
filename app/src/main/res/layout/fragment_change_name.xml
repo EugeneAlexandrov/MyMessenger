@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.EntryPhoneNumberFragment">
+    tools:context=".ui.fragments.ChangeNameFragment">
+
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/register_phone_entry_edittext_layout"
+        android:id="@+id/changename_name_editlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/horizontal_margin"
-        android:hint="@string/label"
+        android:hint="Имя"
         android:textColorHint="@color/colorHint"
         app:boxStrokeColor="@color/primary"
         app:endIconMode="clear_text"
@@ -21,23 +22,35 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/register_phone_entry_edittext"
-            android:backgroundTint="@color/colorPrimary"
+            android:id="@+id/changename_name_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="phone"
+            android:backgroundTint="@color/colorPrimary"
+            android:inputType="text"
             android:textColor="@color/primary" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/register_btn_next"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/changename_surnamename_editlayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/horizontal_margin"
-        android:backgroundTint="@color/primary"
-        android:src="@drawable/ic_next_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:hint="Фамилия"
+        android:textColorHint="@color/colorHint"
+        app:boxStrokeColor="@color/primary"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/changename_name_editlayout">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/changename_surname_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimary"
+            android:inputType="text"
+            android:textColor="@color/primary" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

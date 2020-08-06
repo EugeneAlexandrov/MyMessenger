@@ -45,12 +45,10 @@
 
     <EditText
         android:id="@+id/register_code_entry"
-        style="@style/editText"
-        android:ems="6"
+        style="@style/settings_editText"
         android:autofillHints="@string/register_hint_text"
         android:gravity="center"
         android:hint="@string/register_defaultcode_hint"
-        android:textColorHint="@color/colorHint"
         android:letterSpacing="0.2"
         android:inputType="phone"
         android:maxLength="6"
