@@ -38,6 +38,7 @@ class EntryCodeFragment(val phoneNumber: String, val id: String) :
         AUTH.signInWithCredential(credential).addOnCompleteListener() { task1 ->
             if (task1.isSuccessful) {
                 showToast("Добро пожаловать")
+                (activity as RegisterActivity).replaceActivity(MainActivity())
             }
 //                val uid = AUTH.currentUser?.uid.toString()
 //                val dataMap = mutableMapOf<String, Any>()
