@@ -25,6 +25,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         settings_network_activity.text = USER.status
         btn_aboutMe_text.text = USER.bio
         btn_change_login_logintext.text = USER.username
+        btn_change_login_block.setOnClickListener { replaceFragment(ChangeLoginFragment()) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
