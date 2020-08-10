@@ -1,40 +1,22 @@
 package com.mybclym.mymessenger.ui.fragments
 
-import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.utilits.*
 import kotlinx.android.synthetic.main.fragment_change_login.*
-import kotlinx.android.synthetic.main.fragment_change_name.*
 import java.util.*
 
-class ChangeLoginFragment : BaseFragment(R.layout.fragment_change_login) {
+class ChangeLoginFragment : BaseChangeFragment(R.layout.fragment_change_login) {
 
     lateinit var newUserName: String
 
     override fun onResume() {
         super.onResume()
-        setHasOptionsMenu(true)
         changelogin_login_edittext.setText(USER.username)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        (activity as MainActivity).menuInflater.inflate(
-            R.menu.settings_changename_action_menu,
-            menu
-        )
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.settings_confirm_button -> change()
-        }
-        return true
-    }
-
-    private fun change() {
+    override fun change() {
         newUserName =
             changelogin_login_edittext.text.toString().toLowerCase(Locale.getDefault()).trim()
         if (newUserName.isEmpty()) showToast("Login is empty")

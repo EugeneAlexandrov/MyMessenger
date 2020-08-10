@@ -5,7 +5,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.models.User
+import com.mybclym.mymessenger.ui.activities.RegisterActivity
 
 lateinit var AUTH: FirebaseAuth
 lateinit var REF_DATABASE_ROOT: DatabaseReference
@@ -19,6 +21,8 @@ const val CHILD_ID = "id"
 const val CHILD_PHONE = "phone"
 const val CHILD_USERNAME = "username"
 const val CHILD_FULLNAME = "fullname"
+const val CHILD_BIO = "bio"
+
 
 fun initFirebase() {
     AUTH = Firebase.auth

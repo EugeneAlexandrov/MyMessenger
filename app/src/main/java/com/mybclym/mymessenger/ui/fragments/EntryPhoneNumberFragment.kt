@@ -26,20 +26,9 @@ class EntryPhoneNumberFragment : Fragment(R.layout.fragment_entry_phone_number) 
         super.onStart()
         phoneCallback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                AUTH.signInWithCredential(credential).addOnCompleteListener() {task1->
+                AUTH.signInWithCredential(credential).addOnCompleteListener() { task1 ->
                     if (task1.isSuccessful) {
-                        val uid = AUTH.currentUser?.uid.toString()
-                        val dataMap = mutableMapOf<String, Any>()
-                        dataMap[CHILD_ID] = uid
-                        dataMap[CHILD_PHONE] = phoneNumber
-                        dataMap[CHILD_USERNAME] = uid
-                        REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dataMap)
-                            .addOnCompleteListener { task2 ->
-                                if (task2.isSuccessful) {
-                                    showToast("OK")
-                                    (activity as RegisterActivity).replaceActivity(MainActivity())
-                                } else showToast(task2.exception?.message.toString())
-                            }
+                        initUser(phoneNumber)
                     } else showToast(task1.exception?.message.toString())
                 }
 //                AUTH.signInWithCredential(p0).addOnCompleteListener() {
