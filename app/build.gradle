@@ -57,6 +57,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.3.1'
     //kotlin
     implementation 'com.google.firebase:firebase-database-ktx:19.3.1'
+    //java
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
+    //kotlin
+    implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
+
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

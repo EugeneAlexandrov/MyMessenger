@@ -7,15 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.R
+import com.mybclym.mymessenger.utilits.APP_ACTIVITY
 
 open class BaseFragment(val layout: Int) : Fragment(layout) {
 
     override fun onStart() {
         super.onStart()
+        APP_ACTIVITY.appDrawer.disableDrawer()
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as MainActivity).appDrawer.enableDrawer()
+        APP_ACTIVITY.appDrawer.enableDrawer()
     }
 }
