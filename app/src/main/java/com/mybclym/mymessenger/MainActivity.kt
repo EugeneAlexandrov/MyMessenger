@@ -2,6 +2,7 @@ package com.mybclym.mymessenger
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -28,6 +29,17 @@ class MainActivity : AppCompatActivity() {
             initFields()
             initFunc()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        AppStates.updateState(AppStates.ONLINE)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("TEST","onStop")
+        AppStates.updateState(AppStates.OFFLINE)
     }
 
     private fun initFields() {

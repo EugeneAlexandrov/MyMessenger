@@ -73,11 +73,8 @@ fun hideKeyBoard() {
 }
 
 fun ImageView.downloadAndSetImage(url: String) {
-    if (url.isEmpty()) this.setImageResource(R.drawable.default_user)
-    else {
         Picasso.get().load(url)
             .fit()
             .placeholder(R.drawable.default_user)
             .into(this)
-    }
 }

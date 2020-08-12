@@ -1,0 +1,18 @@
+package com.mybclym.mymessenger.utilits
+
+enum class AppStates(val state: String) {
+    ONLINE("в сети"),
+    OFFLINE("не в сети"),
+    TYPING("печатает");
+
+    companion object {
+        fun updateState(appStates: AppStates) {
+            REF_DATABASE_ROOT
+                .child(NODE_USERS)
+                .child(UID)
+                .child(CHILD_STATUS).setValue(appStates.state)
+                .addOnSuccessListener { USER.status = appStates.state }
+                .addOnFailureListener { showToast(it.message.toString()) }
+        }
+    }
+}
