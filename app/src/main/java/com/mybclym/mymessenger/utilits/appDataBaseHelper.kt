@@ -58,3 +58,14 @@ inline fun putImageToStorage(uri: Uri, path: StorageReference, crossinline funct
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+
+inline fun initUser(crossinline function: () -> Unit) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
+        .addListenerForSingleValueEvent(AppValueEventListener {
+            USER = it.getValue(User::class.java) ?: User()
+//            if (USER.username.isEmpty()) {
+//                USER.username = UID
+//            }
+            function()
+        })
+}

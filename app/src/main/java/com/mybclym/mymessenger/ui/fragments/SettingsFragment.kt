@@ -60,6 +60,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                         settings_user_photo.downloadAndSetImage(it)
                         showToast(getString(R.string.changename_toast_dataupdate))
                         USER.photoUrl = it
+                        APP_ACTIVITY.appDrawer.updateHeader()
                     }
                 }
             }

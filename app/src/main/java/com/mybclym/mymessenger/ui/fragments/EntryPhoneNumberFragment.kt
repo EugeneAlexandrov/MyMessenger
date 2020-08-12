@@ -28,15 +28,10 @@ class EntryPhoneNumberFragment : Fragment(R.layout.fragment_entry_phone_number) 
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                 AUTH.signInWithCredential(credential).addOnCompleteListener() { task1 ->
                     if (task1.isSuccessful) {
-                        initUser(phoneNumber)
+                        showToast("Добро пожаловать")
+                        (activity as RegisterActivity).replaceActivity(MainActivity())
                     } else showToast(task1.exception?.message.toString())
                 }
-//                AUTH.signInWithCredential(p0).addOnCompleteListener() {
-//                    if (it.isSuccessful) {
-//                        showToast("Добро пожаловать")
-//                        (activity as RegisterActivity).replaceActivity(MainActivity())
-//                    } else showToast(it.exception?.message.toString())
-//                }
             }
 
             override fun onVerificationFailed(p0: FirebaseException) {

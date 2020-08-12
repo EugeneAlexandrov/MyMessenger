@@ -3,6 +3,7 @@ package com.mybclym.mymessenger.utilits
 import android.content.Context
 import android.content.Intent
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -50,7 +51,7 @@ fun Fragment.replaceFragment(fragment: Fragment) {
         )?.commit()
 }
 
-fun Fragment.initUser(phone: String) {
+fun Fragment.createFirebaseUser(phone: String) {
     val uid = AUTH.currentUser?.uid.toString()
     val dataMap = mutableMapOf<String, Any>()
     dataMap[CHILD_ID] = uid
@@ -71,8 +72,12 @@ fun hideKeyBoard() {
     imm.hideSoftInputFromWindow(APP_ACTIVITY.window.decorView.windowToken, 0)
 }
 
-fun CircleImageView.downloadAndSetImage(url: String) {
-    Picasso.get().load(url)
-        .placeholder(R.drawable.default_user)
-        .into(this)
+fun ImageView.downloadAndSetImage(url: String) {
+    if (url.isEmpty()) this.setImageResource(R.drawable.default_user)
+    else {
+        Picasso.get().load(url)
+            .fit()
+            .placeholder(R.drawable.default_user)
+            .into(this)
+    }
 }
