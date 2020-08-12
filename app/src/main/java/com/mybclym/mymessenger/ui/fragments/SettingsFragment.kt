@@ -2,9 +2,11 @@ package com.mybclym.mymessenger.ui.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.net.Uri
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import com.google.firebase.storage.StorageReference
 import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.ui.activities.RegisterActivity
@@ -33,6 +35,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         btn_change_login_block.setOnClickListener { replaceFragment(ChangeLoginFragment()) }
         btn_aboutMe_block.setOnClickListener { replaceFragment(ChangeBioFragment()) }
         btn_change_photo.setOnClickListener { changeUserPhoto() }
+        settings_user_photo.downloadAndSetImage(USER.photoUrl)
     }
 
     private fun changeUserPhoto() {
@@ -50,26 +53,33 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
             && data != null
         ) {
             val uri = CropImage.getActivityResult(data).uri
-            val path = REF_STORAGE_ROOT
-                .child(FOLDER_PROFILE_IMAGE)
-                .child(UID)
-            path.putFile(uri).addOnCompleteListener { task1 ->
-                if (task1.isSuccessful) {
-                    path.downloadUrl.addOnCompleteListener { task2 ->
-                        if (task2.isSuccessful) {
-                            val photoURL = task2.result.toString()
-                            REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
-                                .child(CHILD_PHOTO_URL).setValue(photoURL).addOnCompleteListener {
-                                    if (it.isSuccessful) {
-                                        settings_user_photo.downloadAndSetImage(photoURL)
-                                        showToast(getString(R.string.changename_toast_dataupdate))
-                                        USER.photoUrl = photoURL
-                                    }
-                                }
-                        }
+            val path = REF_STORAGE_ROOT.child(FOLDER_PROFILE_IMAGE).child(UID)
+            putImageToStorage(uri, path) {
+                getUrlFromStorage(path) {
+                    putUrlToDataBase(it) {
+                        settings_user_photo.downloadAndSetImage(it)
+                        showToast(getString(R.string.changename_toast_dataupdate))
+                        USER.photoUrl = it
                     }
                 }
             }
+//            path.putFile(uri).addOnCompleteListener { task1 ->
+//                if (task1.isSuccessful) {
+//                    path.downloadUrl.addOnCompleteListener { task2 ->
+//                        if (task2.isSuccessful) {
+//                            val photoURL = task2.result.toString()
+//                            REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
+//                                .child(CHILD_PHOTO_URL).setValue(photoURL).addOnCompleteListener {
+//                                    if (it.isSuccessful) {
+//                                        settings_user_photo.downloadAndSetImage(photoURL)
+//                                        showToast(getString(R.string.changename_toast_dataupdate))
+//                                        USER.photoUrl = photoURL
+//                                    }
+//                                }
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
