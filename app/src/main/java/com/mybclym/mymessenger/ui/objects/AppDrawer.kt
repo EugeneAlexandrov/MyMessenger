@@ -19,12 +19,14 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.ui.fragments.ChartsFragment
+import com.mybclym.mymessenger.ui.fragments.ContactsFragment
 import com.mybclym.mymessenger.ui.fragments.SettingsFragment
+import com.mybclym.mymessenger.utilits.APP_ACTIVITY
 import com.mybclym.mymessenger.utilits.USER
 import com.mybclym.mymessenger.utilits.downloadAndSetImage
 import com.mybclym.mymessenger.utilits.replaceFragment
 
-class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
+class AppDrawer() {
     private lateinit var drawer: Drawer
     private lateinit var header: AccountHeader
     private lateinit var drawerLayout: DrawerLayout
@@ -39,25 +41,25 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
 
     fun disableDrawer() {
         drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
-        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        toolbar.setNavigationOnClickListener {
-            mainActivity.supportFragmentManager.popBackStack()
+        APP_ACTIVITY.toolbar.setNavigationOnClickListener {
+            APP_ACTIVITY.supportFragmentManager.popBackStack()
         }
     }
 
     fun enableDrawer() {
-        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        toolbar.setNavigationOnClickListener {
+        APP_ACTIVITY.toolbar.setNavigationOnClickListener {
             drawer.openDrawer()
         }
     }
 
     private fun createDrawer() {
-        drawer = DrawerBuilder().withActivity(mainActivity)
-            .withToolbar(toolbar)
+        drawer = DrawerBuilder().withActivity(APP_ACTIVITY)
+            .withToolbar(APP_ACTIVITY.toolbar)
             .withActionBarDrawerToggleAnimated(true)
             .withSelectedItem(-1)
             .withAccountHeader(header)
@@ -115,7 +117,8 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
                     when (position) {
-                        7 -> mainActivity.replaceFragment(SettingsFragment())
+                        7 -> APP_ACTIVITY.replaceFragment(SettingsFragment())
+                        4 -> APP_ACTIVITY.replaceFragment(ContactsFragment())
                     }
                     return false
                 }
@@ -130,7 +133,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
             .withIcon(USER.photoUrl)
             .withIdentifier(200)
         header = AccountHeaderBuilder()
-            .withActivity(mainActivity)
+            .withActivity(APP_ACTIVITY)
             .withHeaderBackground(R.drawable.header)
             .addProfiles(currentProfile)
             .build()

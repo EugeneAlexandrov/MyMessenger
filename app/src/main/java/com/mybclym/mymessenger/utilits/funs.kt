@@ -56,13 +56,16 @@ fun Fragment.createFirebaseUser(phone: String) {
     val dataMap = mutableMapOf<String, Any>()
     dataMap[CHILD_ID] = uid
     dataMap[CHILD_PHONE] = phone
-    dataMap[CHILD_USERNAME] = uid
-    REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dataMap)
-        .addOnCompleteListener { task2 ->
-            if (task2.isSuccessful) {
-                showToast("OK")
-                (activity as RegisterActivity).replaceActivity(MainActivity())
-            } else showToast(task2.exception?.message.toString())
+    REF_DATABASE_ROOT.child(NODE_PHONES).child(phone).setValue(uid)
+        .addOnFailureListener { showToast(it.message.toString()) }.addOnCompleteListener {
+            REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dataMap)
+                .addOnSuccessListener {
+                    showToast("OK")
+                    (activity as RegisterActivity).replaceActivity(MainActivity())
+                }
+                .addOnFailureListener {
+                    showToast(it.message.toString())
+                }
         }
 }
 
@@ -73,8 +76,8 @@ fun hideKeyBoard() {
 }
 
 fun ImageView.downloadAndSetImage(url: String) {
-        Picasso.get().load(url)
-            .fit()
-            .placeholder(R.drawable.default_user)
-            .into(this)
+    Picasso.get().load(url)
+        .fit()
+        .placeholder(R.drawable.default_user)
+        .into(this)
 }
