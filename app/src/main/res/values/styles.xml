@@ -42,7 +42,7 @@
     <style name="settings_normaltext">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/app_margin</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/normal_textsize</item>
     </style>
@@ -50,7 +50,7 @@
     <style name="settings_hintText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/app_margin</item>
         <item name="android:textColor">@color/colorHint</item>
         <item name="android:textSize">@dimen/small_textsize</item>
     </style>
@@ -69,15 +69,15 @@
     <style name="separator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:layout_marginStart">@dimen/horizontal_margin</item>
-        <item name="android:layout_marginEnd">@dimen/horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/app_margin</item>
+        <item name="android:layout_marginEnd">@dimen/app_margin</item>
         <item name="android:background">@color/colorHint</item>
     </style>
 
     <style name="settings_label">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/app_margin</item>
         <item name="android:layout_marginTop">@dimen/settings_lable_margin</item>
         <item name="android:paddingTop">@dimen/settings_lable_padding</item>
         <item name="android:paddingBottom">@dimen/settings_lable_padding</item>
@@ -88,7 +88,7 @@
     <style name="settings_editText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/horizontal_margin</item>
+        <item name="android:layout_margin">@dimen/app_margin</item>
         <item name="android:maxLines">1</item>
         <item name="backgroundTint">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/colorHint</item>

@@ -10,7 +10,7 @@
         android:id="@+id/changebio_bio_editlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/horizontal_margin"
+        android:layout_margin="@dimen/app_margin"
         android:hint="расскажите немного о себе"
         android:textColorHint="@color/colorHint"
         app:boxStrokeColor="@color/primary"

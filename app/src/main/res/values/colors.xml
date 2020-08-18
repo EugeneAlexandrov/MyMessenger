@@ -25,4 +25,6 @@
     <color name="material_drawer_selected_text">#2196F3</color>
     <color name="material_drawer_header_selection_text">@color/accent</color>
     <color name="material_drawer_header_selection_subtext">#8A000000</color>
+    <color name="colorGreen">#B6DF9A</color>
+    <color name="colorBlue">#B3D6DF</color>
 </resources>

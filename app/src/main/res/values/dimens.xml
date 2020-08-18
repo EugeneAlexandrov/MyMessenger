@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="horizontal_margin">16dp</dimen>
+    <dimen name="app_margin">16dp</dimen>
     <dimen name="small_textsize">12sp</dimen>
     <dimen name="normal_textsize">16sp</dimen>
     <dimen name="large_textsize">18sp</dimen>
