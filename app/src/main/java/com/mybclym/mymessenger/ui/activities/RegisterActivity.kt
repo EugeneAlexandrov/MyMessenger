@@ -21,7 +21,7 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        toolBar = binding.RegisterToolBar
+        toolBar = binding.registerToolBar
         setSupportActionBar(toolBar)
         title = getString(R.string.register_toolbar_text)
         replaceFragment(EntryPhoneNumberFragment(), false)

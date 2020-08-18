@@ -59,10 +59,12 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
                 refUsers = REF_DATABASE_ROOT.child(NODE_USERS).child(model.id)
                 usersListener = AppValueEventListener {
                     val contact: CommonModel = it.getCommonModel()
-                    holder.name.text = contact.fullname
+                    if (contact.fullname.isEmpty()) {
+                        holder.name.text = model.fullname
+                    } else holder.name.text = contact.fullname
                     holder.status.text = contact.status
                     holder.photo.downloadAndSetImage(contact.photoUrl)
-                    holder.itemView.setOnClickListener { replaceFragment(SingleChatFragment(contact)) }
+                    holder.itemView.setOnClickListener { replaceFragment(SingleChatFragment(model)) }
                 }
                 refUsers.addValueEventListener(usersListener)
                 listenersMap[refUsers] = usersListener

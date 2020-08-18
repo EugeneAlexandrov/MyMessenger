@@ -8,18 +8,15 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.models.CommonModel
-import com.mybclym.mymessenger.models.User
-import com.mybclym.mymessenger.ui.activities.RegisterActivity
+import com.mybclym.mymessenger.models.UserModel
 
 lateinit var AUTH: FirebaseAuth
 lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var REF_STORAGE_ROOT: StorageReference
-lateinit var USER: User
+lateinit var USER: UserModel
 lateinit var UID: String
 
 const val NODE_USERS = "users"
@@ -42,7 +39,7 @@ fun initFirebase() {
     AUTH = Firebase.auth
     REF_DATABASE_ROOT = Firebase.database.reference
     REF_STORAGE_ROOT = Firebase.storage.reference
-    USER = User()
+    USER = UserModel()
     UID = AUTH.currentUser?.uid.toString()
 }
 
@@ -67,7 +64,7 @@ inline fun putImageToStorage(uri: Uri, path: StorageReference, crossinline funct
 inline fun initUser(crossinline function: () -> Unit) {
     REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
         .addListenerForSingleValueEvent(AppValueEventListener {
-            USER = it.getValue(User::class.java) ?: User()
+            USER = it.getValue(UserModel::class.java) ?: UserModel()
             if (USER.username.isEmpty()) {
                 USER.username = UID
             }
@@ -75,47 +72,29 @@ inline fun initUser(crossinline function: () -> Unit) {
         })
 }
 
-fun initContacts() {
-    if (com.mybclym.mymessenger.utilits.checkPermission(READ_CONTACTS)) {
-        var arrayContacts = arrayListOf<CommonModel>()
-        var cursor = APP_ACTIVITY.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            null,
-            null,
-            null,
-            null
-        )
-        cursor?.let {
-            while (it.moveToNext()) {
-                val fullName =
-                    it.getString(it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                val phone =
-                    it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                val newModel = CommonModel()
-                newModel.fullname = fullName
-                newModel.phone = phone.replace(Regex("[\\s,-]"), "")
-                arrayContacts.add(newModel)
-            }
-        }
-        cursor?.close()
-        updatePhonesToDataBase(arrayContacts)
-    }
-}
-
 fun updatePhonesToDataBase(arrayContacts: ArrayList<CommonModel>) {
-    REF_DATABASE_ROOT.child(NODE_PHONES).addListenerForSingleValueEvent(AppValueEventListener {
-        it.children.forEach { snapshot ->
-            arrayContacts.forEach { contact ->
-                if (snapshot.key == contact.phone) {
-                    REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)
-                        .child(snapshot.value.toString()).child(CHILD_ID)
-                        .setValue(snapshot.value.toString())
-                        .addOnFailureListener { showToast(it.message.toString()) }
+    if (AUTH.currentUser != null) {
+        REF_DATABASE_ROOT.child(NODE_PHONES).addListenerForSingleValueEvent(AppValueEventListener {
+            it.children.forEach { snapshot ->
+                arrayContacts.forEach { contact ->
+                    if (snapshot.key == contact.phone) {
+                        REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)
+                            .child(snapshot.value.toString()).child(CHILD_ID)
+                            .setValue(snapshot.value.toString())
+                            .addOnFailureListener { showToast(it.message.toString()) }
+                        REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)
+                            .child(snapshot.value.toString()).child(CHILD_FULLNAME)
+                            .setValue(contact.fullname)
+                            .addOnFailureListener { showToast(it.message.toString()) }
+                    }
                 }
             }
-        }
-    })
+        })
+    }
 }
 
 fun DataSnapshot.getCommonModel(): CommonModel =
     this.getValue(CommonModel::class.java) ?: CommonModel()
+
+fun DataSnapshot.getUserModel(): UserModel =
+    this.getValue(UserModel::class.java) ?: UserModel()
