@@ -8,8 +8,8 @@ data class CommonModel(
     var status: String = "",
     var phone: String = "",
     var photoUrl: String = "empty",
-    var test: String = "",
+    var text: String = "",
     var type: String = "",
     var from: String = "",
-    var timeStamp: String = ""
+    var timeStamp: Long = 0
 )

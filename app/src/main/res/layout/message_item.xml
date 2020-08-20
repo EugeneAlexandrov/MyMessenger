@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/common_message_block"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="90dp"
+        android:layout_marginVertical="4dp"
         android:background="@drawable/bg_our_message"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,8 +36,8 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="8dp"
             android:paddingBottom="4dp"
-            android:textSize="12sp"
             android:textColor="@color/colorHint"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_message_text"
             tools:text="@tools:sample/date/hhmm" />
@@ -46,6 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="90dp"
+        android:layout_marginVertical="4dp"
         android:background="@drawable/bg_companion_message"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,13 +68,13 @@
             tools:text="Привет, меня зовут Женя" />
 
         <TextView
-            android:id="@+id/message_time"
+            android:id="@+id/companion_message_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="8dp"
-            android:textSize="12sp"
             android:paddingBottom="4dp"
             android:textColor="@color/colorHint"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/companion_message_text"
             tools:text="@tools:sample/date/hhmm" />

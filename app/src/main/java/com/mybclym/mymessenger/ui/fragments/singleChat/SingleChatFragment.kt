@@ -2,6 +2,8 @@ package com.mybclym.mymessenger.ui.fragments.singleChat
 
 import android.os.Bundle
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.database.DatabaseReference
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.models.CommonModel
@@ -15,10 +17,15 @@ import kotlinx.android.synthetic.main.fragment_single_chat.*
 class SingleChatFragment(private val contact: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
 
-    lateinit var listenerChatToolbar: AppValueEventListener
-    lateinit var companionUser: UserModel
-    lateinit var chatToolbarInfo: View
-    lateinit var refUsers: DatabaseReference
+    private lateinit var chatToolbarListener: AppValueEventListener
+    private lateinit var companionUser: UserModel
+    private lateinit var chatToolbarInfo: View
+    private lateinit var refUsers: DatabaseReference
+    private lateinit var refMessages: DatabaseReference
+    private lateinit var adapter: SingleChatAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var messagesListener: AppValueEventListener
+    private var messagesList = emptyList<CommonModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +33,24 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     override fun onResume() {
         super.onResume()
+        initToolbar()
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        recyclerView = singlechat_messages_recycler
+        adapter = SingleChatAdapter()
+        recyclerView.adapter = adapter
+        refMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES).child(UID).child(contact.id)
+        messagesListener = AppValueEventListener { dataSnapShot ->
+            messagesList = dataSnapShot.children.map { it.getCommonModel() }
+            adapter.setList(messagesList)
+            recyclerView.smoothScrollToPosition(adapter.itemCount)
+        }
+        refMessages.addValueEventListener(messagesListener)
+    }
+
+    private fun initToolbar() {
         chatToolbarInfo = APP_ACTIVITY.toolbar.chat_toolbar
         chatToolbarInfo.visibility = View.VISIBLE
         btn_send.setOnClickListener {
@@ -33,16 +58,16 @@ class SingleChatFragment(private val contact: CommonModel) :
             if (message.isEmpty()) showToast("Введите сообщение")
             else sendMessage(message, contact.id, TYPE_TEXT) {
                 message_et.setText("")
+                hideKeyBoard()
             }
         }
-        listenerChatToolbar = AppValueEventListener {
+        chatToolbarListener = AppValueEventListener {
             companionUser = it.getUserModel()
             initInfoToolbar()
         }
         refUsers = REF_DATABASE_ROOT.child(NODE_USERS).child(contact.id)
-        refUsers.addValueEventListener(listenerChatToolbar)
+        refUsers.addValueEventListener(chatToolbarListener)
     }
-
 
 
     private fun initInfoToolbar() {
@@ -56,8 +81,10 @@ class SingleChatFragment(private val contact: CommonModel) :
     override fun onPause() {
         super.onPause()
         chatToolbarInfo.visibility = View.GONE
-        refUsers.removeEventListener(listenerChatToolbar)
+        refUsers.removeEventListener(chatToolbarListener)
+        refMessages.removeEventListener(messagesListener)
     }
+
 }
 
 
