@@ -7,7 +7,9 @@ data class CommonModel(
     var fullname: String = "",
     var status: String = "",
     var phone: String = "",
-    var photoUrl: String = "empty"
-) {
-
-}
+    var photoUrl: String = "empty",
+    var test: String = "",
+    var type: String = "",
+    var from: String = "",
+    var timeStamp: String = ""
+)

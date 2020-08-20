@@ -10,6 +10,7 @@ import com.mybclym.mymessenger.utilits.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.chat_toolbar.*
 import kotlinx.android.synthetic.main.chat_toolbar.view.*
+import kotlinx.android.synthetic.main.fragment_single_chat.*
 
 class SingleChatFragment(private val contact: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
@@ -27,6 +28,13 @@ class SingleChatFragment(private val contact: CommonModel) :
         super.onResume()
         chatToolbarInfo = APP_ACTIVITY.toolbar.chat_toolbar
         chatToolbarInfo.visibility = View.VISIBLE
+        btn_send.setOnClickListener {
+            val message = message_et.text.toString()
+            if (message.isEmpty()) showToast("Введите сообщение")
+            else sendMessage(message, contact.id, TYPE_TEXT) {
+                message_et.setText("")
+            }
+        }
         listenerChatToolbar = AppValueEventListener {
             companionUser = it.getUserModel()
             initInfoToolbar()
@@ -34,6 +42,8 @@ class SingleChatFragment(private val contact: CommonModel) :
         refUsers = REF_DATABASE_ROOT.child(NODE_USERS).child(contact.id)
         refUsers.addValueEventListener(listenerChatToolbar)
     }
+
+
 
     private fun initInfoToolbar() {
         if (companionUser.fullname.isEmpty()) {
