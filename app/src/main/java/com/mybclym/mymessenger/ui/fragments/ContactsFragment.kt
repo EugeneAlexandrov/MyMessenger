@@ -10,6 +10,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DatabaseReference
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.models.CommonModel
+import com.mybclym.mymessenger.ui.fragments.singleChat.SingleChatFragment
 import com.mybclym.mymessenger.utilits.*
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.contacts_item.view.*
@@ -64,7 +65,11 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
                     } else holder.name.text = contact.fullname
                     holder.status.text = contact.status
                     holder.photo.downloadAndSetImage(contact.photoUrl)
-                    holder.itemView.setOnClickListener { replaceFragment(SingleChatFragment(model)) }
+                    holder.itemView.setOnClickListener { replaceFragment(
+                        SingleChatFragment(
+                            model
+                        )
+                    ) }
                 }
                 refUsers.addValueEventListener(usersListener)
                 listenersMap[refUsers] = usersListener

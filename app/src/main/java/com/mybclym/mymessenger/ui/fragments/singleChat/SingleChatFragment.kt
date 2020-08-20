@@ -1,4 +1,4 @@
-package com.mybclym.mymessenger.ui.fragments
+package com.mybclym.mymessenger.ui.fragments.singleChat
 
 import android.os.Bundle
 import android.view.View
@@ -6,9 +6,9 @@ import com.google.firebase.database.DatabaseReference
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.models.CommonModel
 import com.mybclym.mymessenger.models.UserModel
+import com.mybclym.mymessenger.ui.fragments.BaseFragment
 import com.mybclym.mymessenger.utilits.*
 import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.chat_toolbar.*
 import kotlinx.android.synthetic.main.chat_toolbar.view.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
 
