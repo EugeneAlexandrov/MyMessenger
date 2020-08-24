@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import com.mybclym.mymessenger.database.AUTH
+import com.mybclym.mymessenger.database.initFirebase
+import com.mybclym.mymessenger.database.initUser
 import com.mybclym.mymessenger.databinding.ActivityMainBinding
-import com.mybclym.mymessenger.ui.activities.RegisterActivity
-import com.mybclym.mymessenger.ui.fragments.ChartsFragment
+import com.mybclym.mymessenger.ui.fragments.MainFragment
+import com.mybclym.mymessenger.ui.fragments.register.EntryPhoneNumberFragment
 import com.mybclym.mymessenger.ui.objects.AppDrawer
 import com.mybclym.mymessenger.utilits.*
 
@@ -21,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("TEST", "MainActivity onCreate")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         APP_ACTIVITY = this
@@ -33,15 +37,15 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     override fun onStart() {
         super.onStart()
+        Log.d("TEST", "MainActivity onStart")
         AppStates.updateState(AppStates.ONLINE)
     }
 
     override fun onStop() {
         super.onStop()
-        Log.d("TEST", "onStop")
+        Log.d("TEST", "MainActivity onStop")
         AppStates.updateState(AppStates.OFFLINE)
     }
 
@@ -52,12 +56,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFunc() {
+        setSupportActionBar(toolbar)
         if (AUTH.currentUser != null) {
-            setSupportActionBar(toolbar)
             appDrawer.create()
-            replaceFragment(ChartsFragment(), false)
+            replaceFragment(MainFragment(), false)
         } else {
-            replaceActivity(RegisterActivity())
+            replaceFragment(EntryPhoneNumberFragment(), false)
         }
     }
 
@@ -67,8 +71,9 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (ContextCompat.checkSelfPermission(APP_ACTIVITY,READ_CONTACTS)
-            == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(APP_ACTIVITY, READ_CONTACTS)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             initContacts()
         }
     }

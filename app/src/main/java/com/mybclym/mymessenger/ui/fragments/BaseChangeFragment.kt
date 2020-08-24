@@ -18,7 +18,7 @@ open class BaseChangeFragment(val layout: Int) : Fragment(layout) {
 
     override fun onStop() {
         super.onStop()
-
+        APP_ACTIVITY.appDrawer.enableDrawer()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

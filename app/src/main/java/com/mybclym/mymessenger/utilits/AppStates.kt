@@ -1,5 +1,7 @@
 package com.mybclym.mymessenger.utilits
 
+import com.mybclym.mymessenger.database.*
+
 enum class AppStates(val state: String) {
     ONLINE("в сети"),
     OFFLINE("не в сети"),

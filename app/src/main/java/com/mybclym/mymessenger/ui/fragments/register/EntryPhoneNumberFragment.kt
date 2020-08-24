@@ -1,14 +1,12 @@
-package com.mybclym.mymessenger.ui.fragments
+package com.mybclym.mymessenger.ui.fragments.register
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import com.mybclym.mymessenger.MainActivity
 import com.mybclym.mymessenger.R
-import com.mybclym.mymessenger.ui.activities.RegisterActivity
+import com.mybclym.mymessenger.database.AUTH
 import com.mybclym.mymessenger.utilits.*
 import kotlinx.android.synthetic.main.fragment_entry_phone_number.*
 import java.util.concurrent.TimeUnit
@@ -29,7 +27,7 @@ class EntryPhoneNumberFragment : Fragment(R.layout.fragment_entry_phone_number) 
                 AUTH.signInWithCredential(credential).addOnCompleteListener() { task1 ->
                     if (task1.isSuccessful) {
                         showToast("Добро пожаловать")
-                        (activity as RegisterActivity).replaceActivity(MainActivity())
+                        restartActivity()
                     } else showToast(task1.exception?.message.toString())
                 }
             }
@@ -39,7 +37,12 @@ class EntryPhoneNumberFragment : Fragment(R.layout.fragment_entry_phone_number) 
             }
 
             override fun onCodeSent(id: String, token: PhoneAuthProvider.ForceResendingToken) {
-                replaceFragment(EntryCodeFragment(phoneNumber, id))
+                replaceFragment(
+                    EntryCodeFragment(
+                        phoneNumber,
+                        id
+                    )
+                )
             }
         }
         register_btn_next.setOnClickListener { sendCode() }
@@ -59,7 +62,7 @@ class EntryPhoneNumberFragment : Fragment(R.layout.fragment_entry_phone_number) 
             phoneNumber,
             60,
             TimeUnit.SECONDS,
-            activity as RegisterActivity,
+            APP_ACTIVITY,
             phoneCallback
         )
     }

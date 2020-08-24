@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.mybclym.mymessenger.R
+import com.mybclym.mymessenger.database.UID
 import com.mybclym.mymessenger.models.CommonModel
-import com.mybclym.mymessenger.utilits.UID
 import com.mybclym.mymessenger.utilits.asTime
 import kotlinx.android.synthetic.main.message_item.view.*
 import java.text.SimpleDateFormat

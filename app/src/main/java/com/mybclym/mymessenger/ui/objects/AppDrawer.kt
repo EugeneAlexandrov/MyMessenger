@@ -18,11 +18,11 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.mybclym.mymessenger.R
-import com.mybclym.mymessenger.ui.fragments.ChartsFragment
+import com.mybclym.mymessenger.database.USER
+import com.mybclym.mymessenger.ui.fragments.MainFragment
 import com.mybclym.mymessenger.ui.fragments.ContactsFragment
 import com.mybclym.mymessenger.ui.fragments.SettingsFragment
 import com.mybclym.mymessenger.utilits.APP_ACTIVITY
-import com.mybclym.mymessenger.utilits.USER
 import com.mybclym.mymessenger.utilits.downloadAndSetImage
 import com.mybclym.mymessenger.utilits.replaceFragment
 
@@ -117,8 +117,8 @@ class AppDrawer() {
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
                     when (position) {
-                        7 -> APP_ACTIVITY.replaceFragment(SettingsFragment())
-                        4 -> APP_ACTIVITY.replaceFragment(ContactsFragment())
+                        7 -> replaceFragment(SettingsFragment())
+                        4 -> replaceFragment(ContactsFragment())
                     }
                     return false
                 }
@@ -128,7 +128,7 @@ class AppDrawer() {
 
     private fun createHeader() {
         currentProfile = ProfileDrawerItem()
-            .withName(USER.fullname)
+            .withName(USER.fullname.replace("/", " ", true))
             .withEmail(USER.phone)
             .withIcon(USER.photoUrl)
             .withIdentifier(200)
@@ -141,7 +141,7 @@ class AppDrawer() {
 
     fun updateHeader() {
         currentProfile
-            .withName(USER.fullname)
+            .withName(USER.fullname.replace("/", " ", true))
             .withEmail(USER.phone)
             .withIcon(USER.photoUrl)
         header.updateProfile(currentProfile)

@@ -1,7 +1,6 @@
-package com.mybclym.mymessenger.utilits
+package com.mybclym.mymessenger.database
 
 import android.net.Uri
-import android.provider.ContactsContract
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -11,8 +10,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.models.CommonModel
 import com.mybclym.mymessenger.models.UserModel
+import com.mybclym.mymessenger.utilits.APP_ACTIVITY
+import com.mybclym.mymessenger.utilits.AppValueEventListener
+import com.mybclym.mymessenger.utilits.showToast
 
 lateinit var AUTH: FirebaseAuth
 lateinit var REF_DATABASE_ROOT: DatabaseReference
@@ -55,7 +58,9 @@ fun initFirebase() {
 }
 
 inline fun putUrlToDataBase(url: String, crossinline function: () -> Unit) {
-    REF_DATABASE_ROOT.child(NODE_USERS).child(UID).child(CHILD_PHOTO_URL).setValue(url)
+    REF_DATABASE_ROOT.child(NODE_USERS).child(
+        UID
+    ).child(CHILD_PHOTO_URL).setValue(url)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
@@ -77,7 +82,8 @@ inline fun initUser(crossinline function: () -> Unit) {
         .addListenerForSingleValueEvent(AppValueEventListener {
             USER = it.getValue(UserModel::class.java) ?: UserModel()
             if (USER.username.isEmpty()) {
-                USER.username = UID
+                USER.username =
+                    UID
             }
             function()
         })
@@ -85,22 +91,35 @@ inline fun initUser(crossinline function: () -> Unit) {
 
 fun updatePhonesToDataBase(arrayContacts: ArrayList<CommonModel>) {
     if (AUTH.currentUser != null) {
-        REF_DATABASE_ROOT.child(NODE_PHONES).addListenerForSingleValueEvent(AppValueEventListener {
-            it.children.forEach { snapshot ->
-                arrayContacts.forEach { contact ->
-                    if (snapshot.key == contact.phone) {
-                        REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)
-                            .child(snapshot.value.toString()).child(CHILD_ID)
-                            .setValue(snapshot.value.toString())
-                            .addOnFailureListener { showToast(it.message.toString()) }
-                        REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)
-                            .child(snapshot.value.toString()).child(CHILD_FULLNAME)
-                            .setValue(contact.fullname)
-                            .addOnFailureListener { showToast(it.message.toString()) }
+        REF_DATABASE_ROOT.child(NODE_PHONES)
+            .addListenerForSingleValueEvent(AppValueEventListener {
+                it.children.forEach { snapshot ->
+                    arrayContacts.forEach { contact ->
+                        if (snapshot.key == contact.phone) {
+                            REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS)
+                                .child(UID)
+                                .child(snapshot.value.toString())
+                                .child(CHILD_ID)
+                                .setValue(snapshot.value.toString())
+                                .addOnFailureListener {
+                                    showToast(
+                                        it.message.toString()
+                                    )
+                                }
+                            REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS)
+                                .child(UID)
+                                .child(snapshot.value.toString())
+                                .child(CHILD_FULLNAME)
+                                .setValue(contact.fullname)
+                                .addOnFailureListener {
+                                    showToast(
+                                        it.message.toString()
+                                    )
+                                }
+                        }
                     }
                 }
-            }
-        })
+            })
     }
 }
 
@@ -127,3 +146,53 @@ fun sendMessage(message: String, companionUserId: String, typeText: String, func
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+
+fun setLoginToDataBase(newLogin: String) {
+    REF_DATABASE_ROOT.child(NODE_USERNAMES)
+        .child(newLogin).setValue(UID)
+        .addOnSuccessListener {
+            updateCurrentLogin(newLogin)
+        }
+}
+
+fun updateCurrentLogin(newLogin: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS)
+        .child(UID).child(CHILD_USERNAME).setValue(newLogin)
+        .addOnSuccessListener {
+            showToast(APP_ACTIVITY.getString(R.string.changename_toast_dataupdate))
+            deleteOldLogin(newLogin)
+        }
+}
+
+private fun deleteOldLogin(newLogin: String) {
+    REF_DATABASE_ROOT.child(NODE_USERNAMES)
+        .child(USER.username).removeValue()
+        .addOnSuccessListener {
+            showToast(APP_ACTIVITY.getString(R.string.changename_toast_dataupdate))
+            APP_ACTIVITY.supportFragmentManager.popBackStack()
+            USER.username = newLogin
+        }
+}
+
+fun setBioToDataBase(bio: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS)
+        .child(UID).child(CHILD_BIO).setValue(bio)
+        .addOnSuccessListener {
+            showToast(APP_ACTIVITY.getString(R.string.changename_toast_dataupdate))
+            USER.bio = bio
+            APP_ACTIVITY.supportFragmentManager.popBackStack()
+        }
+}
+
+fun setNameToDataBase(fullname: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS)
+        .child(UID).child(CHILD_FULLNAME)
+        .setValue(fullname)
+        .addOnSuccessListener {
+            showToast(APP_ACTIVITY.getString(R.string.changename_toast_dataupdate))
+            USER.fullname = fullname
+            APP_ACTIVITY.appDrawer.updateHeader()
+            APP_ACTIVITY.supportFragmentManager.popBackStack()
+        }
+}
+

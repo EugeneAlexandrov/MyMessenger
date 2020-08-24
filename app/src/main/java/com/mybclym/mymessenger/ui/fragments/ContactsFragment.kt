@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DatabaseReference
 import com.mybclym.mymessenger.R
+import com.mybclym.mymessenger.database.*
 import com.mybclym.mymessenger.models.CommonModel
 import com.mybclym.mymessenger.ui.fragments.singleChat.SingleChatFragment
 import com.mybclym.mymessenger.utilits.*
@@ -16,7 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.contacts_item.view.*
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
-class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
+class ContactsFragment : Fragment(R.layout.fragment_contacts) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FirebaseRecyclerAdapter<CommonModel, ContactsHolder>
     private lateinit var refContacts: DatabaseReference
@@ -41,7 +43,9 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
 
     private fun initRecyclerView() {
         recyclerView = contacts_recyclerView
-        refContacts = REF_DATABASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)
+        refContacts = REF_DATABASE_ROOT.child(
+            NODE_PHONES_CONTACTS
+        ).child(UID)
         val options = FirebaseRecyclerOptions.Builder<CommonModel>()
             .setQuery(refContacts, CommonModel::class.java)
             .build()
@@ -57,7 +61,9 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
                 position: Int,
                 model: CommonModel
             ) {
-                refUsers = REF_DATABASE_ROOT.child(NODE_USERS).child(model.id)
+                refUsers = REF_DATABASE_ROOT.child(
+                    NODE_USERS
+                ).child(model.id)
                 usersListener = AppValueEventListener {
                     val contact: CommonModel = it.getCommonModel()
                     if (contact.fullname.isEmpty()) {
@@ -65,11 +71,13 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
                     } else holder.name.text = contact.fullname
                     holder.status.text = contact.status
                     holder.photo.downloadAndSetImage(contact.photoUrl)
-                    holder.itemView.setOnClickListener { replaceFragment(
-                        SingleChatFragment(
-                            model
+                    holder.itemView.setOnClickListener {
+                        replaceFragment(
+                            SingleChatFragment(
+                                model
+                            )
                         )
-                    ) }
+                    }
                 }
                 refUsers.addValueEventListener(usersListener)
                 listenersMap[refUsers] = usersListener
