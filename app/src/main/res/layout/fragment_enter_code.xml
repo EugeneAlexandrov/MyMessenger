@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.EntryCodeFragment">
+    tools:context=".ui.fragments.register.EntryCodeFragment">
 
     <ImageView
         android:id="@+id/register_imageView"
@@ -45,15 +45,22 @@
 
     <EditText
         android:id="@+id/register_code_entry"
-        style="@style/settings_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:autofillHints="@string/register_hint_text"
+        android:backgroundTint="@color/colorAccent"
         android:gravity="center"
         android:hint="@string/register_defaultcode_hint"
-        android:letterSpacing="0.2"
         android:inputType="phone"
+        android:letterSpacing="0.2"
         android:maxLength="6"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorHint"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:text="132456" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
