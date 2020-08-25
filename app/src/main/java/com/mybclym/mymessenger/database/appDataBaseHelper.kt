@@ -136,6 +136,7 @@ fun sendMessage(message: String, companionUserId: String, typeText: String, func
     val mapMessage = hashMapOf<String, Any>()
     mapMessage[CHILD_FROM] = UID
     mapMessage[CHILD_TYPE] = typeText
+    mapMessage[CHILD_ID] = messageKey.toString()
     mapMessage[CHILD_TEXT] = message
     mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
     val mapDialog = hashMapOf<String, Any>()

@@ -3,6 +3,7 @@ package com.mybclym.mymessenger.ui.fragments.singleChat
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.database.ChildEventListener
@@ -33,6 +34,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var countMessages = 15
     private var isScrolling = false
     private var isSmoothScrollPosition = true
+    private lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,19 +48,29 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     private fun initRecyclerView() {
         recyclerView = singlechat_messages_recycler
+        layoutManager = LinearLayoutManager(this.context)
+        recyclerView.layoutManager = layoutManager
         adapter = SingleChatAdapter()
         recyclerView.adapter = adapter
         refMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES).child(UID).child(contact.id)
         messagesListener = AppChildEventListener {
-            adapter.addItem(it.getCommonModel(), isSmoothScrollPosition)
-            if (isSmoothScrollPosition) recyclerView.smoothScrollToPosition(adapter.itemCount)
+            val message = it.getCommonModel()
+            if (isSmoothScrollPosition) {
+                adapter.addItemToBottom(message)
+                recyclerView.smoothScrollToPosition(adapter.itemCount)
+            } else {
+                adapter.addItemToTop(message)
+            }
         }
 
         refMessages.limitToLast(countMessages).addChildEventListener(messagesListener)
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (isScrolling && dy < 0) updateData()
+                if (isScrolling && dy < 0 && layoutManager.findFirstVisibleItemPosition() <= 5) {
+                    println("UpdateData")
+                    updateData()
+                }
             }
 
 
