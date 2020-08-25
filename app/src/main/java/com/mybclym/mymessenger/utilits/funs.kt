@@ -42,14 +42,19 @@ fun replaceFragment(fragment: Fragment, addStack: Boolean = true) {
     }
 }
 
-fun Fragment.createFirebaseUser(phone: String) {
+fun createFirebaseUser(phone: String) {
     val uid = AUTH.currentUser?.uid.toString()
     val dataMap = mutableMapOf<String, Any>()
     dataMap[CHILD_ID] = uid
     dataMap[CHILD_PHONE] = phone
-    REF_DATABASE_ROOT.child(NODE_PHONES).child(phone).setValue(uid)
-        .addOnFailureListener { showToast(it.message.toString()) }.addOnCompleteListener {
-            REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dataMap)
+    REF_DATABASE_ROOT.child(NODE_PHONES)
+        .child(phone)
+        .setValue(uid)
+        .addOnFailureListener { showToast(it.message.toString()) }
+        .addOnCompleteListener {
+            REF_DATABASE_ROOT.child(NODE_USERS)
+                .child(uid)
+                .updateChildren(dataMap)
                 .addOnSuccessListener {
                     showToast("OK")
                     restartActivity()
@@ -74,9 +79,9 @@ fun ImageView.downloadAndSetImage(url: String) {
 }
 
 fun initContacts() {
-    if (com.mybclym.mymessenger.utilits.checkPermission(READ_CONTACTS)) {
-        var arrayContacts = arrayListOf<CommonModel>()
-        var cursor = APP_ACTIVITY.contentResolver.query(
+    if (checkPermission(READ_CONTACTS)) {
+        val arrayContacts = arrayListOf<CommonModel>()
+        val cursor = APP_ACTIVITY.contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             null,
             null,

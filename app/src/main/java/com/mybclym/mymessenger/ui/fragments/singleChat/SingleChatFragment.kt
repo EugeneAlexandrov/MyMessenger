@@ -2,8 +2,12 @@ package com.mybclym.mymessenger.ui.fragments.singleChat
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AbsListView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.internal.service.Common
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.database.*
@@ -25,8 +29,10 @@ class SingleChatFragment(private val contact: CommonModel) :
     private lateinit var refMessages: DatabaseReference
     private lateinit var adapter: SingleChatAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var messagesListener: AppValueEventListener
-    private var messagesList = emptyList<CommonModel>()
+    private lateinit var messagesListener: AppChildEventListener
+    private var countMessages = 15
+    private var isScrolling = false
+    private var isSmoothScrollPosition = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +49,41 @@ class SingleChatFragment(private val contact: CommonModel) :
         adapter = SingleChatAdapter()
         recyclerView.adapter = adapter
         refMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES).child(UID).child(contact.id)
-        messagesListener = AppValueEventListener { dataSnapShot ->
-            messagesList = dataSnapShot.children.map { it.getCommonModel() }
-            adapter.setList(messagesList)
-            recyclerView.smoothScrollToPosition(adapter.itemCount)
+        messagesListener = AppChildEventListener {
+            adapter.addItem(it.getCommonModel(), isSmoothScrollPosition)
+            if (isSmoothScrollPosition) recyclerView.smoothScrollToPosition(adapter.itemCount)
         }
-        refMessages.addValueEventListener(messagesListener)
+
+        refMessages.limitToLast(countMessages).addChildEventListener(messagesListener)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (isScrolling && dy < 0) updateData()
+            }
+
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true
+                }
+            }
+        })
+    }
+
+    private fun updateData() {
+        isSmoothScrollPosition = false
+        isScrolling = false
+        countMessages += 15
+        refMessages.removeEventListener(messagesListener)
+        refMessages.limitToLast(countMessages).addChildEventListener(messagesListener)
     }
 
     private fun initToolbar() {
         chatToolbarInfo = APP_ACTIVITY.toolbar.chat_toolbar
         chatToolbarInfo.visibility = View.VISIBLE
         btn_send.setOnClickListener {
+            isSmoothScrollPosition = true
             val message = message_et.text.toString()
             if (message.isEmpty()) showToast("Введите сообщение")
             else sendMessage(message, contact.id, TYPE_TEXT) {
@@ -84,6 +113,7 @@ class SingleChatFragment(private val contact: CommonModel) :
         chatToolbarInfo.visibility = View.GONE
         refUsers.removeEventListener(chatToolbarListener)
         refMessages.removeEventListener(messagesListener)
+        println()
     }
 
 }
