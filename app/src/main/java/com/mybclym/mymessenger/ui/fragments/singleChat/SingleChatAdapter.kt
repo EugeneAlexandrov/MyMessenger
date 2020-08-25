@@ -42,7 +42,10 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
         }
     }
 
-    fun addItem(item: CommonModel, isBottom: Boolean) {
+    fun addItem(
+        item: CommonModel, isBottom: Boolean,
+        onSucces: () -> Unit
+    ) {
         if (isBottom) {
             if (!messagesCacheList.contains(item)) {
                 messagesCacheList.add(item)
@@ -55,6 +58,7 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
                 notifyItemInserted(0)
             }
         }
+        onSucces()
     }
 
     class SingleChatHolder(view: View) : RecyclerView.ViewHolder(view) {

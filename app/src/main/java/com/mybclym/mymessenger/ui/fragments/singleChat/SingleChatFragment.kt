@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -33,6 +34,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var countMessages = 15
     private var isScrolling = false
     private var isSmoothScrollPosition = true
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     override fun onResume() {
         super.onResume()
         initToolbar()
+        swipeRefreshLayout = chat_swipe_refresh
         initRecyclerView()
     }
 
@@ -50,8 +53,11 @@ class SingleChatFragment(private val contact: CommonModel) :
         recyclerView.adapter = adapter
         refMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES).child(UID).child(contact.id)
         messagesListener = AppChildEventListener {
-            adapter.addItem(it.getCommonModel(), isSmoothScrollPosition)
-            if (isSmoothScrollPosition) recyclerView.smoothScrollToPosition(adapter.itemCount)
+            adapter.addItem(it.getCommonModel(), isSmoothScrollPosition) {
+                if (isSmoothScrollPosition) recyclerView.smoothScrollToPosition(adapter.itemCount)
+                swipeRefreshLayout.isRefreshing = false
+            }
+
         }
 
         refMessages.limitToLast(countMessages).addChildEventListener(messagesListener)
@@ -69,6 +75,7 @@ class SingleChatFragment(private val contact: CommonModel) :
                 }
             }
         })
+        swipeRefreshLayout.setOnRefreshListener { updateData() }
     }
 
     private fun updateData() {
