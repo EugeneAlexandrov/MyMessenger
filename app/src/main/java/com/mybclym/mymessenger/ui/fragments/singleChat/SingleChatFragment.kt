@@ -87,12 +87,7 @@ class SingleChatFragment(private val contact: CommonModel) :
             putImageToStorage(uri, path) {
                 getUrlFromStorage(path) {
                     sendFile(contact.id, it, messageKey, TYPE_IMAGE)
-//                    putUrlToDataBase(it) {
-//                        settings_user_photo.downloadAndSetImage(it)
-//                        showToast(getString(R.string.changename_toast_dataupdate))
-//                        USER.photoUrl = it
-//                        APP_ACTIVITY.appDrawer.updateHeader()
-//                    }
+                    isSmoothScrollPosition = true
                 }
             }
         }
