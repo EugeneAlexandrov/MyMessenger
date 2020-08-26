@@ -11,6 +11,7 @@ data class CommonModel(
     var text: String = "",
     var type: String = "",
     var from: String = "",
+    var fileUrl: String = "empty",
     var timeStamp: Long = 0
 
 

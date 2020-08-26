@@ -35,6 +35,8 @@ const val NODE_MESSAGES = "messages"
 
 
 const val FOLDER_PROFILE_IMAGE = "profile_images"
+const val FOLDER_MESSAGE_FILE = "message_images"
+
 
 const val CHILD_ID = "id"
 const val CHILD_PHONE = "phone"
@@ -47,6 +49,7 @@ const val CHILD_TEXT = "text"
 const val CHILD_TYPE = "type"
 const val CHILD_FROM = "from"
 const val CHILD_TIMESTAMP = "timeStamp"
+const val CHILD_FILE_URL = "fileUrl"
 
 
 fun initFirebase() {
@@ -129,13 +132,18 @@ fun DataSnapshot.getCommonModel(): CommonModel =
 fun DataSnapshot.getUserModel(): UserModel =
     this.getValue(UserModel::class.java) ?: UserModel()
 
-fun sendMessage(message: String, companionUserId: String, typeText: String, function: () -> Unit) {
+fun sendMessage(
+    message: String,
+    companionUserId: String,
+    messageType: String,
+    function: () -> Unit
+) {
     val refDialogUser = "$NODE_MESSAGES/$UID/$companionUserId"
     val refDialogCompanionUser = "$NODE_MESSAGES/$companionUserId/$UID"
     val messageKey = REF_DATABASE_ROOT.child(refDialogUser).push().key
     val mapMessage = hashMapOf<String, Any>()
     mapMessage[CHILD_FROM] = UID
-    mapMessage[CHILD_TYPE] = typeText
+    mapMessage[CHILD_TYPE] = messageType
     mapMessage[CHILD_ID] = messageKey.toString()
     mapMessage[CHILD_TEXT] = message
     mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
@@ -195,5 +203,22 @@ fun setNameToDataBase(fullname: String) {
             APP_ACTIVITY.appDrawer.updateHeader()
             APP_ACTIVITY.supportFragmentManager.popBackStack()
         }
+}
+
+fun sendFile(companionUserId: String, fileUrl: String, messageKey: String, messageType: String) {
+    val refDialogUser = "$NODE_MESSAGES/$UID/$companionUserId"
+    val refDialogCompanionUser = "$NODE_MESSAGES/$companionUserId/$UID"
+    val mapMessage = hashMapOf<String, Any>()
+    mapMessage[CHILD_FROM] = UID
+    mapMessage[CHILD_TYPE] = messageType
+    mapMessage[CHILD_ID] = messageKey
+    mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
+    mapMessage[CHILD_FILE_URL] = fileUrl
+    val mapDialog = hashMapOf<String, Any>()
+    mapDialog["$refDialogUser/$messageKey"] = mapMessage
+    mapDialog["$refDialogCompanionUser/$messageKey"] = mapMessage
+    REF_DATABASE_ROOT
+        .updateChildren(mapDialog)
+        .addOnFailureListener { showToast(it.message.toString()) }
 }
 
