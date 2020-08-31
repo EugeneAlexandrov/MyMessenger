@@ -1,10 +1,8 @@
 package com.mybclym.mymessenger.database
 
 import android.net.Uri
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -16,40 +14,6 @@ import com.mybclym.mymessenger.models.UserModel
 import com.mybclym.mymessenger.utilits.APP_ACTIVITY
 import com.mybclym.mymessenger.utilits.AppValueEventListener
 import com.mybclym.mymessenger.utilits.showToast
-
-lateinit var AUTH: FirebaseAuth
-lateinit var REF_DATABASE_ROOT: DatabaseReference
-lateinit var REF_STORAGE_ROOT: StorageReference
-lateinit var USER: UserModel
-lateinit var UID: String
-
-const val TYPE_TEXT = "text"
-const val TYPE_IMAGE = "image"
-const val TYPE_AUDIO = "audio"
-
-const val NODE_USERS = "users"
-const val NODE_USERNAMES = "userNames"
-const val NODE_PHONES = "phones"
-const val NODE_PHONES_CONTACTS = "phones_contacts"
-const val NODE_MESSAGES = "messages"
-
-
-const val FOLDER_PROFILE_IMAGE = "profile_images"
-const val FOLDER_MESSAGE_FILE = "message_images"
-
-
-const val CHILD_ID = "id"
-const val CHILD_PHONE = "phone"
-const val CHILD_USERNAME = "username"
-const val CHILD_FULLNAME = "fullname"
-const val CHILD_BIO = "bio"
-const val CHILD_PHOTO_URL = "photoUrl"
-const val CHILD_STATUS = "status"
-const val CHILD_TEXT = "text"
-const val CHILD_TYPE = "type"
-const val CHILD_FROM = "from"
-const val CHILD_TIMESTAMP = "timeStamp"
-const val CHILD_FILE_URL = "fileUrl"
 
 
 fun initFirebase() {
@@ -74,7 +38,7 @@ inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url:
         .addOnFailureListener { showToast(it.message.toString()) }
 }
 
-inline fun putImageToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
+inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
     path.putFile(uri)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
@@ -221,4 +185,22 @@ fun sendFile(companionUserId: String, fileUrl: String, messageKey: String, messa
         .updateChildren(mapDialog)
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+
+fun getMessageKey(id: String): String {
+    return REF_DATABASE_ROOT
+        .child(NODE_MESSAGES)
+        .child(UID)
+        .child(id)
+        .push().key.toString()
+}
+
+fun uploadFileToStorage(uri: Uri, messageKey: String, companionID: String, messageType: String) {
+    val path = REF_STORAGE_ROOT.child(FOLDER_FILES).child(messageKey)
+    putFileToStorage(uri, path) {
+        getUrlFromStorage(path) {
+            sendFile(companionID, it, messageKey, messageType)
+        }
+    }
+}
+
 

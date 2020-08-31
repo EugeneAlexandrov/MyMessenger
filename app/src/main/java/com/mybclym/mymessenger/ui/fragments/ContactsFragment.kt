@@ -68,7 +68,7 @@ class ContactsFragment : Fragment(R.layout.fragment_contacts) {
                     val contact: CommonModel = it.getCommonModel()
                     if (contact.fullname.isEmpty()) {
                         holder.name.text = model.fullname
-                    } else holder.name.text = contact.fullname
+                    } else holder.name.text = contact.fullname.replace("/", " ", true)
                     holder.status.text = contact.status
                     holder.photo.downloadAndSetImage(contact.photoUrl)
                     holder.itemView.setOnClickListener {
