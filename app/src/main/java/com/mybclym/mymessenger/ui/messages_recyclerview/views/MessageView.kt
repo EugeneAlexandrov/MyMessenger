@@ -1,4 +1,4 @@
-package com.mybclym.mymessenger.ui.fragments.messages_recyclerview.views
+package com.mybclym.mymessenger.ui.messages_recyclerview.views
 
 interface MessageView {
     val id: String

@@ -1,6 +1,6 @@
-package com.mybclym.mymessenger.ui.fragments.messages_recyclerview.views
+package com.mybclym.mymessenger.ui.messages_recyclerview.views
 
-data class ViewImageMessage(
+data class ViewAudioMessage(
     override val id: String,
     override val from: String,
     override val timeStamp: String,
@@ -8,12 +8,12 @@ data class ViewImageMessage(
     override val text: String = ""
 ) : MessageView {
     override fun getTypeView(): Int {
-        return MessageView.IMAGE_MESSAGE
+        return MessageView.AUDIO_MESSAGE
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is ViewImageMessage) return false
+        if (other !is ViewAudioMessage) return false
 
         if (id != other.id) return false
 

@@ -1,4 +1,4 @@
-package com.mybclym.mymessenger.ui.fragments.messages_recyclerview.views
+package com.mybclym.mymessenger.ui.messages_recyclerview.views
 
 import com.mybclym.mymessenger.database.TYPE_AUDIO
 import com.mybclym.mymessenger.database.TYPE_IMAGE

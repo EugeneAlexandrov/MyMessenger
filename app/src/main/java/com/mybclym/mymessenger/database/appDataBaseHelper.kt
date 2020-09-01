@@ -1,6 +1,7 @@
 package com.mybclym.mymessenger.database
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ServerValue
@@ -14,6 +15,7 @@ import com.mybclym.mymessenger.models.UserModel
 import com.mybclym.mymessenger.utilits.APP_ACTIVITY
 import com.mybclym.mymessenger.utilits.AppValueEventListener
 import com.mybclym.mymessenger.utilits.showToast
+import java.io.File
 
 
 fun initFirebase() {
@@ -202,5 +204,16 @@ fun uploadFileToStorage(uri: Uri, messageKey: String, companionID: String, messa
         }
     }
 }
+
+fun getFileFromStorage(file: File, fileUrl: String, function: () -> Unit) {
+    val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
+    path.getFile(file)
+        .addOnSuccessListener {
+        Log.d("Test","file get from firebase, start playing")
+            function()
+        }
+        .addOnFailureListener { it.message.toString() }
+}
+
 
 

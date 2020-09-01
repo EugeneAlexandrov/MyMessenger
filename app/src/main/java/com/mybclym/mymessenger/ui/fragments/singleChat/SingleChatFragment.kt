@@ -17,7 +17,7 @@ import com.mybclym.mymessenger.database.*
 import com.mybclym.mymessenger.models.CommonModel
 import com.mybclym.mymessenger.models.UserModel
 import com.mybclym.mymessenger.ui.fragments.BaseFragment
-import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.views.AppViewFactory
+import com.mybclym.mymessenger.ui.messages_recyclerview.views.AppViewFactory
 import com.mybclym.mymessenger.utilits.*
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.view.*

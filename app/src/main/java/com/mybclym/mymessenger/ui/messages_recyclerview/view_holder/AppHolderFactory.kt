@@ -1,10 +1,10 @@
-package com.mybclym.mymessenger.ui.fragments.messages_recyclerview.view_holder
+package com.mybclym.mymessenger.ui.messages_recyclerview.view_holder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mybclym.mymessenger.R
-import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.views.MessageView
+import com.mybclym.mymessenger.ui.messages_recyclerview.views.MessageView
 
 
 class AppHolderFactory {

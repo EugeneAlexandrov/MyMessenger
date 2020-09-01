@@ -2,11 +2,8 @@ package com.mybclym.mymessenger.ui.fragments.singleChat
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.view_holder.AppHolderFactory
-import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.view_holder.AudioMessageHolder
-import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.view_holder.ImageMessageHolder
-import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.view_holder.TextMessageHolder
-import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.views.MessageView
+import com.mybclym.mymessenger.ui.messages_recyclerview.view_holder.*
+import com.mybclym.mymessenger.ui.messages_recyclerview.views.MessageView
 
 class SingleChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -16,17 +13,21 @@ class SingleChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return AppHolderFactory.getHolder(parent, viewType)
     }
 
-    override fun getItemCount(): Int = messagesCacheList.size
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is TextMessageHolder -> holder.drawMessageText(holder, messagesCacheList[position])
-            is ImageMessageHolder -> holder.drawMessageImage(holder, messagesCacheList[position])
-            is AudioMessageHolder -> holder.drawMessageVoice(holder, messagesCacheList[position])
-            else -> {
-            }
-        }
+        (holder as MessageHolder).drawMessage(messagesCacheList[position])
     }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        (holder as MessageHolder).onAttach(messagesCacheList[holder.adapterPosition])
+        super.onViewAttachedToWindow(holder)
+    }
+
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        (holder as MessageHolder).onDettach()
+        super.onViewDetachedFromWindow(holder)
+    }
+
+    override fun getItemCount(): Int = messagesCacheList.size
 
     override fun getItemViewType(position: Int): Int {
         return messagesCacheList[position].getTypeView()
