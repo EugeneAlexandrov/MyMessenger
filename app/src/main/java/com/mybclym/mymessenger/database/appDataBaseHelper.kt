@@ -24,10 +24,8 @@ fun initFirebase() {
     UID = AUTH.currentUser?.uid.toString()
 }
 
-inline fun putUrlToDataBase(url: String, crossinline function: () -> Unit) {
-    REF_DATABASE_ROOT.child(NODE_USERS).child(
-        UID
-    ).child(CHILD_PHOTO_URL).setValue(url)
+inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
+    path.putFile(uri)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
@@ -38,8 +36,10 @@ inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url:
         .addOnFailureListener { showToast(it.message.toString()) }
 }
 
-inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
-    path.putFile(uri)
+inline fun putUrlToDataBase(url: String, crossinline function: () -> Unit) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(
+        UID
+    ).child(CHILD_PHOTO_URL).setValue(url)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }

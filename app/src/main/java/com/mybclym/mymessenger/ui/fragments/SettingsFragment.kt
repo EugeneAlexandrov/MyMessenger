@@ -48,7 +48,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         ) {
             val uri = CropImage.getActivityResult(data).uri
             val path = REF_STORAGE_ROOT.child(FOLDER_PROFILE_IMAGE).child(UID)
-            putImageToStorage(uri, path) {
+            putFileToStorage(uri, path) {
                 getUrlFromStorage(path) {
                     putUrlToDataBase(it) {
                         settings_user_photo.downloadAndSetImage(it)

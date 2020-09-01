@@ -1,10 +1,14 @@
 package com.mybclym.mymessenger.ui.fragments.singleChat
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AbsListView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DatabaseReference
@@ -13,11 +17,15 @@ import com.mybclym.mymessenger.database.*
 import com.mybclym.mymessenger.models.CommonModel
 import com.mybclym.mymessenger.models.UserModel
 import com.mybclym.mymessenger.ui.fragments.BaseFragment
+import com.mybclym.mymessenger.ui.fragments.messages_recyclerview.views.AppViewFactory
 import com.mybclym.mymessenger.utilits.*
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.chat_toolbar.view.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SingleChatFragment(private val contact: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
@@ -34,6 +42,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var isScrolling = false
     private var isSmoothScrollPosition = true
     private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var appVoiceRecorder: AppVoiceRecorder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,23 +55,60 @@ class SingleChatFragment(private val contact: CommonModel) :
         initRecyclerView()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initFields() {
+        appVoiceRecorder = AppVoiceRecorder()
         recyclerView = singlechat_messages_recyclerview
         layoutManager = LinearLayoutManager(this.context)
         singlechat_message_et.addTextChangedListener(AppTextWatcher {
             val string = singlechat_message_et.text.toString()
             if (string.isEmpty()) {
                 btn_send.visibility = View.GONE
-                btn_attach.visibility = View.VISIBLE
+                btn_container.visibility = View.VISIBLE
             } else {
                 btn_send.visibility = View.VISIBLE
-                btn_attach.visibility = View.GONE
+                btn_container.visibility = View.GONE
             }
         })
         btn_attach.setOnClickListener {
             attachFile()
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            btn_voice.setOnTouchListener { v, event ->
+                if (checkPermission(RECORD_AUDIO)) {
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        btn_voice.setColorFilter(
+                            ContextCompat.getColor(
+                                APP_ACTIVITY,
+                                R.color.colorPrimary
+                            )
+                        )
+                        println("Eventtime=" + event.eventTime)
+                        val messageKey = getMessageKey(contact.id)
+                        appVoiceRecorder.startRecord(messageKey)
+
+                    } else if (event.action == MotionEvent.ACTION_UP) {
+                        btn_voice.colorFilter = null
+                        appVoiceRecorder.stopRecord { file, messageKey ->
+                            println("UpTime=" + event.eventTime)
+                            println("UpTime=" + event.downTime)
+                            if (event.eventTime - event.downTime > 1000) {
+                                uploadFileToStorage(
+                                    Uri.fromFile(file),
+                                    messageKey,
+                                    contact.id,
+                                    TYPE_AUDIO
+                                )
+                                isSmoothScrollPosition = true
+                            } else appVoiceRecorder.deleteFile()
+                        }
+                    }
+                }
+                true
+            }
+        }
     }
+
 
     private fun attachFile() {
         CropImage.activity()
@@ -78,24 +124,13 @@ class SingleChatFragment(private val contact: CommonModel) :
             && data != null
         ) {
             val uri = CropImage.getActivityResult(data).uri
-            val messageKey = REF_DATABASE_ROOT
-                .child(NODE_MESSAGES)
-                .child(UID)
-                .child(contact.id)
-                .push().key.toString()
-            val path = REF_STORAGE_ROOT.child(FOLDER_MESSAGE_FILE).child(messageKey)
-            putImageToStorage(uri, path) {
-                getUrlFromStorage(path) {
-                    sendFile(contact.id, it, messageKey, TYPE_IMAGE)
-                    isSmoothScrollPosition = true
-                }
-            }
+            val messageKey = getMessageKey(contact.id)
+            uploadFileToStorage(uri, messageKey, contact.id, TYPE_IMAGE)
+            isSmoothScrollPosition = true
         }
     }
 
     private fun initRecyclerView() {
-
-
         recyclerView.layoutManager = layoutManager
         adapter = SingleChatAdapter()
         recyclerView.adapter = adapter
@@ -103,13 +138,12 @@ class SingleChatFragment(private val contact: CommonModel) :
         messagesListener = AppChildEventListener {
             val message = it.getCommonModel()
             if (isSmoothScrollPosition) {
-                adapter.addItemToBottom(message)
+                adapter.addItemToBottom(AppViewFactory.getView(message))
                 recyclerView.smoothScrollToPosition(adapter.itemCount)
             } else {
-                adapter.addItemToTop(message)
+                adapter.addItemToTop(AppViewFactory.getView(message))
             }
         }
-
         refMessages.limitToLast(countMessages).addChildEventListener(messagesListener)
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -119,7 +153,6 @@ class SingleChatFragment(private val contact: CommonModel) :
                     updateData()
                 }
             }
-
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -162,7 +195,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     private fun initInfoToolbar() {
         if (companionUser.fullname.isEmpty()) {
             chatToolbarInfo.toolbar_singlechat_fulname.text = contact.fullname
-        } else chatToolbarInfo.toolbar_singlechat_fulname.text = companionUser.fullname
+        } else chatToolbarInfo.toolbar_singlechat_fulname.text = companionUser.fullname.replace("/", " ", true)
         chatToolbarInfo.toolbar_singlechat_image.downloadAndSetImage(companionUser.photoUrl)
         chatToolbarInfo.toolbar_singlechat_status.text = companionUser.status
     }
@@ -175,6 +208,10 @@ class SingleChatFragment(private val contact: CommonModel) :
         println()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        appVoiceRecorder.releadeRecorder()
+    }
 }
 
 
