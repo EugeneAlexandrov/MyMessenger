@@ -11,6 +11,7 @@ import android.widget.AbsListView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.DatabaseReference
 import com.mybclym.mymessenger.R
 import com.mybclym.mymessenger.database.*
@@ -22,6 +23,7 @@ import com.mybclym.mymessenger.utilits.*
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.chat_toolbar.view.*
+import kotlinx.android.synthetic.main.choice_upload.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +45,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var isSmoothScrollPosition = true
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var appVoiceRecorder: AppVoiceRecorder
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +60,8 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initFields() {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_uploadchoice)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         appVoiceRecorder = AppVoiceRecorder()
         recyclerView = singlechat_messages_recyclerview
         layoutManager = LinearLayoutManager(this.context)
@@ -71,7 +76,7 @@ class SingleChatFragment(private val contact: CommonModel) :
             }
         })
         btn_attach.setOnClickListener {
-            attachFile()
+            attach()
         }
         CoroutineScope(Dispatchers.IO).launch {
             btn_voice.setOnTouchListener { v, event ->
@@ -109,8 +114,20 @@ class SingleChatFragment(private val contact: CommonModel) :
         }
     }
 
+    private fun attach() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        btn_attach_file.setOnClickListener { attachFile() }
+        btn_attach_image.setOnClickListener { attachImage() }
+    }
 
     private fun attachFile() {
+        val intent = Intent(Intent(Intent.ACTION_GET_CONTENT))
+        intent.type = "*/*"
+        startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
+    }
+
+
+    private fun attachImage() {
         CropImage.activity()
             .setAspectRatio(1, 1)
             .setRequestedSize(600, 600)
@@ -119,14 +136,21 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
-            && resultCode == Activity.RESULT_OK
-            && data != null
-        ) {
-            val uri = CropImage.getActivityResult(data).uri
-            val messageKey = getMessageKey(contact.id)
-            uploadFileToStorage(uri, messageKey, contact.id, TYPE_IMAGE)
-            isSmoothScrollPosition = true
+        if (data != null) {
+            when (requestCode) {
+                CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                    val uri = CropImage.getActivityResult(data).uri
+                    val messageKey = getMessageKey(contact.id)
+                    uploadFileToStorage(uri, messageKey, contact.id, TYPE_IMAGE)
+                    isSmoothScrollPosition = true
+                }
+                PICK_FILE_REQUEST_CODE -> {
+                    val uri = data.data
+                    val messageKey = getMessageKey(contact.id)
+                    uri?.let { uploadFileToStorage(it, messageKey, contact.id, TYPE_FILE) }
+                    isSmoothScrollPosition = true
+                }
+            }
         }
     }
 
@@ -195,7 +219,8 @@ class SingleChatFragment(private val contact: CommonModel) :
     private fun initInfoToolbar() {
         if (companionUser.fullname.isEmpty()) {
             chatToolbarInfo.toolbar_singlechat_fulname.text = contact.fullname
-        } else chatToolbarInfo.toolbar_singlechat_fulname.text = companionUser.fullname.replace("/", " ", true)
+        } else chatToolbarInfo.toolbar_singlechat_fulname.text =
+            companionUser.fullname.replace("/", " ", true)
         chatToolbarInfo.toolbar_singlechat_image.downloadAndSetImage(companionUser.photoUrl)
         chatToolbarInfo.toolbar_singlechat_status.text = companionUser.status
     }

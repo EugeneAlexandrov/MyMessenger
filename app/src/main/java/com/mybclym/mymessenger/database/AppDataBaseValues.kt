@@ -14,6 +14,8 @@ lateinit var UID: String
 const val TYPE_TEXT = "text"
 const val TYPE_IMAGE = "image"
 const val TYPE_AUDIO = "audio"
+const val TYPE_FILE = "file"
+
 
 const val NODE_USERS = "users"
 const val NODE_USERNAMES = "userNames"
