@@ -171,7 +171,13 @@ fun setNameToDataBase(fullname: String) {
         }
 }
 
-fun sendFile(companionUserId: String, fileUrl: String, messageKey: String, messageType: String) {
+fun sendFile(
+    companionUserId: String,
+    fileUrl: String,
+    messageKey: String,
+    messageType: String,
+    dysplayName: String
+) {
     val refDialogUser = "$NODE_MESSAGES/$UID/$companionUserId"
     val refDialogCompanionUser = "$NODE_MESSAGES/$companionUserId/$UID"
     val mapMessage = hashMapOf<String, Any>()
@@ -180,6 +186,7 @@ fun sendFile(companionUserId: String, fileUrl: String, messageKey: String, messa
     mapMessage[CHILD_ID] = messageKey
     mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
     mapMessage[CHILD_FILE_URL] = fileUrl
+    mapMessage[CHILD_TEXT] = dysplayName
     val mapDialog = hashMapOf<String, Any>()
     mapDialog["$refDialogUser/$messageKey"] = mapMessage
     mapDialog["$refDialogCompanionUser/$messageKey"] = mapMessage
@@ -196,11 +203,17 @@ fun getMessageKey(id: String): String {
         .push().key.toString()
 }
 
-fun uploadFileToStorage(uri: Uri, messageKey: String, companionID: String, messageType: String) {
+fun uploadFileToStorage(
+    uri: Uri,
+    messageKey: String,
+    companionID: String,
+    messageType: String,
+    dysplayName: String = ""
+) {
     val path = REF_STORAGE_ROOT.child(FOLDER_FILES).child(messageKey)
     putFileToStorage(uri, path) {
         getUrlFromStorage(path) {
-            sendFile(companionID, it, messageKey, messageType)
+            sendFile(companionID, it, messageKey, messageType, dysplayName)
         }
     }
 }
@@ -209,7 +222,7 @@ fun getFileFromStorage(file: File, fileUrl: String, function: () -> Unit) {
     val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
     path.getFile(file)
         .addOnSuccessListener {
-        Log.d("Test","file get from firebase, start playing")
+            Log.d("Test", "file get from firebase, start playing")
             function()
         }
         .addOnFailureListener { it.message.toString() }

@@ -1,6 +1,7 @@
 package com.mybclym.mymessenger.ui.messages_recyclerview.views
 
 import com.mybclym.mymessenger.database.TYPE_AUDIO
+import com.mybclym.mymessenger.database.TYPE_FILE
 import com.mybclym.mymessenger.database.TYPE_IMAGE
 import com.mybclym.mymessenger.models.CommonModel
 
@@ -22,6 +23,15 @@ class AppViewFactory {
                         message.from,
                         message.timeStamp.toString(),
                         message.fileUrl
+                    )
+                }
+                TYPE_FILE -> {
+                    ViewFileMessage(
+                        message.id,
+                        message.from,
+                        message.timeStamp.toString(),
+                        message.fileUrl,
+                        message.text
                     )
                 }
                 else -> {

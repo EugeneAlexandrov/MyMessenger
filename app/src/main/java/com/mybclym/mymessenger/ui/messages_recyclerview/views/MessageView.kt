@@ -14,6 +14,8 @@ interface MessageView {
             get() = 1
         val AUDIO_MESSAGE: Int
             get() = 2
+        val FILE_MESSAGE: Int
+            get() = 3
     }
 
     fun getTypeView(): Int

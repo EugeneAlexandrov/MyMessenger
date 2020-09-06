@@ -147,12 +147,14 @@ class SingleChatFragment(private val contact: CommonModel) :
                 PICK_FILE_REQUEST_CODE -> {
                     val uri = data.data
                     val messageKey = getMessageKey(contact.id)
-                    uri?.let { uploadFileToStorage(it, messageKey, contact.id, TYPE_FILE) }
+                    val fileName = getFileName(uri!!)
+                    uploadFileToStorage(uri, messageKey, contact.id, TYPE_FILE, fileName)
                     isSmoothScrollPosition = true
                 }
             }
         }
     }
+
 
     private fun initRecyclerView() {
         recyclerView.layoutManager = layoutManager
