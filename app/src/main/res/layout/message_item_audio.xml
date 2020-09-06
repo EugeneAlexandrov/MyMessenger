@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="4dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="90dp"
         android:background="@drawable/bg_companion_message"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,29 +19,31 @@
 
         <ImageView
             android:id="@+id/companion_message_audio_playbtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
             android:src="@drawable/ic_play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/companion_message_audio_stopbtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
             android:src="@drawable/ic_pause"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <SeekBar
+            android:id="@+id/companion_message_audio_progress"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toEndOf="@id/companion_barrier"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -58,6 +59,14 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="@tools:sample/date/hhmm" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/companion_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="right"
+            app:constraint_referenced_ids="companion_message_audio_stopbtn,companion_message_audio_playbtn"
+            tools:layout_editor_absoluteX="208dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +74,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="4dp"
-        android:layout_marginStart="90dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/bg_our_message"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -74,29 +82,31 @@
 
         <ImageView
             android:id="@+id/user_message_audio_playbtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
             android:src="@drawable/ic_play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/user_message_audio_stopbtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
             android:src="@drawable/ic_pause"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <SeekBar
+            android:id="@+id/user_message_audio_progress"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/user_barrier"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -112,6 +122,15 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="@tools:sample/date/hhmm" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/user_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="right"
+            app:constraint_referenced_ids="user_message_audio_playbtn,user_message_audio_stopbtn"
+            tools:layout_editor_absoluteX="208dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
