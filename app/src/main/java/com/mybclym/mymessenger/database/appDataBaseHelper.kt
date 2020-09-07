@@ -222,7 +222,7 @@ fun getFileFromStorage(file: File, fileUrl: String, function: () -> Unit) {
     val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
     path.getFile(file)
         .addOnSuccessListener {
-            Log.d("Test", "file get from firebase, start playing")
+            Log.d("Test", "file get from firebase")
             function()
         }
         .addOnFailureListener { it.message.toString() }
